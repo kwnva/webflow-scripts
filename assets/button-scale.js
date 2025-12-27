@@ -1,105 +1,50 @@
-/*
-  assets/button-scale.js
-  Adds a robust button scale animation using the Web Animations API.
-  - Graceful fallback for prefers-reduced-motion
-  - Cancels previous animations to avoid stacking
-  - Supports mouse, touch, and keyboard (focus)
-  - Includes MutationObserver cleanup
-  Usage: include this script on pages where #myButton exists, or change the selector.
-*/
-(function () {
-  // 1. Επιλέγουμε το κουμπί (adjust selector if needed)
-  const button = document.getElementById('myButton');
-  if (!button) {
-    // Δεν βρέθηκε το κουμπί — δεν κάνουμε τίποτα.
-    console.warn('button-scale: #myButton not found');
-    return;
-  }
+// 1. Επιλέγουμε τα στοιχεία
+const button = document.getElementById('myButton');
+const contents = button.querySelectorAll('.text-block, .svg'); // Επιλέγουμε ΚΑΙ το κείμενο ΚΑΙ το εικονίδιο
 
-  // 2. Επιλογή περιεχομένων (κείμενο + svg)
-  const contents = Array.from(button.querySelectorAll('.text-block, .svg'));
+// 2. Ορίζουμε πόσο θέλουμε να μεγαλώσει το κουμπί
+const scaleFactor = 1.08; // Το κουμπί θα γίνει 15% μεγαλύτερο
+const inverseScale = 1 / scaleFactor; // Υπολογίζουμε αυτόματα το αντίστροφο (π.χ. ~0.87)
 
-  // 3. Παράμετροι κλίμακας
-  const scaleFactor = 1.08; // 1.08 => ~8% μεγαλύτερο
-  const inverseScale = 1 / scaleFactor; // ~0.9259
+// 3. Ρυθμίσεις (Κοινές για τέλειο συγχρονισμό)
+const timing = {
+  duration: 400,
+  fill: 'forwards',
+  easing: 'cubic-bezier(0.25, 1, 0.5, 1)' 
+};
 
-  // 4. Ρυθμίσεις animation
-  const timing = {
-    duration: 400,
-    fill: 'forwards',
-    easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
-  };
+// 4. Mouse Enter
+button.addEventListener('mouseenter', () => {
+  
+  // Το Κουμπί ΜΕΓΑΛΩΝΕΙ
+  button.animate([
+    { transform: 'scale(1)' },
+    { transform: `scale(${scaleFactor})` }
+  ], timing);
 
-  // Θα κρατάμε τα ενεργά animations για ακύρωση
-  let activeButtonAnim = null;
-  const activeContentAnims = new WeakMap();
-
-  // Έλεγχος prefers-reduced-motion
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function animateButton(fromScale, toScale) {
-    if (reduceMotion) {
-      button.style.transform = `scale(${toScale})`;
-      return;
-    }
-    if (activeButtonAnim) activeButtonAnim.cancel();
-    activeButtonAnim = button.animate([
-      { transform: `scale(${fromScale})` },
-      { transform: `scale(${toScale})` }
+  // Τα Περιεχόμενα ΜΙΚΡΑΙΝΟΥΝ (για να φαίνονται σταθερά)
+  contents.forEach(el => {
+    el.animate([
+      { transform: 'scale(1)' },
+      { transform: `scale(${inverseScale})` } 
     ], timing);
-  }
-
-  function animateContent(el, fromScale, toScale) {
-    if (reduceMotion) {
-      el.style.transform = `scale(${toScale})`;
-      return;
-    }
-    const prev = activeContentAnims.get(el);
-    if (prev) prev.cancel();
-    const anim = el.animate([
-      { transform: `scale(${fromScale})` },
-      { transform: `scale(${toScale})` }
-    ], timing);
-    activeContentAnims.set(el, anim);
-  }
-
-  // Συνήθεις ενέργειες για είσοδο/έξοδο
-  function onEnter() {
-    animateButton(1, scaleFactor);
-    contents.forEach(el => animateContent(el, 1, inverseScale));
-  }
-
-  function onLeave() {
-    animateButton(scaleFactor, 1);
-    contents.forEach(el => animateContent(el, inverseScale, 1));
-  }
-
-  // Event listeners: mouse, touch, keyboard focus
-  button.addEventListener('mouseenter', onEnter);
-  button.addEventListener('mouseleave', onLeave);
-
-  // Touch (touchstart / touchend) — για κινητά
-  button.addEventListener('touchstart', (e) => {
-    // αποτρέπουμε σύντομο tap να πυροδοτήσει και mouse events δύο φορές
-    e.preventDefault();
-    onEnter();
-  }, { passive: false });
-  button.addEventListener('touchend', onLeave);
-
-  // Keyboard accessibility — focus/blur
-  button.addEventListener('focus', onEnter);
-  button.addEventListener('blur', onLeave);
-
-  // Προαιρετικά: ακύρωση animations αν το στοιχείο αφαιρεθεί από DOM
-  const obs = new MutationObserver(() => {
-    if (!document.contains(button)) {
-      if (activeButtonAnim) activeButtonAnim.cancel();
-      contents.forEach(el => {
-        const a = activeContentAnims.get(el);
-        if (a) a.cancel();
-      });
-      obs.disconnect();
-    }
   });
-  obs.observe(document, { childList: true, subtree: true });
-})();
+});
+
+// 5. Mouse Leave
+button.addEventListener('mouseleave', () => {
+  
+  // Επιστροφή Κουμπιού
+  button.animate([
+    { transform: `scale(${scaleFactor})` },
+    { transform: 'scale(1)' }
+  ], timing);
+
+  // Επιστροφή Περιεχομένων
+  contents.forEach(el => {
+    el.animate([
+      { transform: `scale(${inverseScale})` },
+      { transform: 'scale(1)' }
+    ], timing);
+  });
+});
