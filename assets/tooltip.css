@@ -1,0 +1,89 @@
+/* Tooltip - Icon Types */
+[data-css-tooltip-icon] > svg path:not(:first-child) {
+  display: none;
+}
+
+[data-css-tooltip-icon="question"] > svg path:nth-child(2),
+[data-css-tooltip-icon="question"] > svg path:nth-child(3){
+  display: block;
+}
+
+[data-css-tooltip-icon="alert"] > svg path:nth-child(4),
+[data-css-tooltip-icon="alert"] > svg path:nth-child(5){
+  display: block;
+}
+
+[data-css-tooltip-icon="info"] > svg path:nth-child(6),
+[data-css-tooltip-icon="info"] > svg path:nth-child(7),
+[data-css-tooltip-icon="info"] > svg path:nth-child(8),
+[data-css-tooltip-icon="info"] > svg path:nth-child(9){
+  display: block;
+}
+
+/* Tooltip - Hover Element */
+[data-css-tooltip-hover] {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Tooltip - Animation */
+[data-css-tooltip-y] {
+  transition: all 0.4s cubic-bezier(0.625, 0.05, 0, 1);
+  opacity: 0;
+  visibility: hidden;
+}
+
+[data-css-tooltip-hover]:hover [data-css-tooltip-y] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.css-tooltip__box-inner {
+  transition: transform 0.4s cubic-bezier(0.625, 0.05, 0, 1);
+  transform: translateY(1em) scale(0.9) rotate(0.001deg);
+}
+
+[data-css-tooltip-hover]:hover [data-css-tooltip-y] .css-tooltip__box-inner {
+  transform: translateY(0em) scale(1) rotate(0.001deg);
+}
+
+/* Tooltip - Bottom */
+[data-css-tooltip-y="bottom"] {
+  top: 100%;
+  bottom: unset;
+}
+
+[data-css-tooltip-y="bottom"] .css-tooltip__card {
+  order: 2;
+}
+
+[data-css-tooltip-y="bottom"] .css-tootlip__tip {
+  transform: scaleY(-1);
+}
+
+[data-css-tooltip-y="bottom"] .css-tooltip__box-inner {
+  transform: translateY(-1em) scale(0.9) rotate(0.001deg);
+}
+
+/* Tooltip - Left */
+[data-css-tooltip-x="left"] {
+  align-items: flex-start;
+  left: -2em;
+  transform: translateX(0%);
+}
+
+[data-css-tooltip-x="left"] .css-tooltip__box-inner {
+  align-items: flex-start;
+}
+
+/* Tooltip - Right */
+[data-css-tooltip-x="right"] {
+  align-items: flex-end;
+  left: unset;
+  right: -2em;
+  transform: translateX(0%);
+}
+
+[data-css-tooltip-x="right"] .css-tooltip__box-inner {
+  align-items: flex-end;
+}
