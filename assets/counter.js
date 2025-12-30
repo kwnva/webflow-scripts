@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     // --- Βασικές Ρυθμίσεις ---
     const elementID = 'counter-element'; // Το ID του στοιχείου
-    const startNumber = 632930;          // Αρχικό νούμερο (αν δεν υπάρχει στο storage)
+    const startNumber = 682930;          // Αρχικό νούμερο (αν δεν υπάρχει στο storage)
     const speed = 100;                  // Κάθε πότε αλλάζει (1000ms = 1 δευτερόλεπτο)
     
     // --- Defaults (αν ξεχάσεις το attribute) ---
