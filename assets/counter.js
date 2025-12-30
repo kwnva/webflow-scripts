@@ -2,11 +2,11 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- Βασικές Ρυθμίσεις ---
     const elementID = 'counter-element'; // Το ID του στοιχείου
     const startNumber = 632930;          // Αρχικό νούμερο (αν δεν υπάρχει στο storage)
-    const speed = 1000;                  // Κάθε πότε αλλάζει (1000ms = 1 δευτερόλεπτο)
+    const speed = 100;                  // Κάθε πότε αλλάζει (1000ms = 1 δευτερόλεπτο)
     
     // --- Defaults (αν ξεχάσεις το attribute) ---
-    let minIncrement = 2; 
-    let maxIncrement = 3; 
+    let minIncrement = 1; 
+    let maxIncrement = 4; 
 
     const element = document.getElementById(elementID);
 
