@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let currentNumber = startNumber;
 
     // LocalStorage Logic
-    const storedCount = localStorage.getItem('fakeAppCounter');
+    const storedCount = localStorage.getItem('appCounter');
     if (storedCount) {
         let parsedCount = parseInt(storedCount, 10);
         if (parsedCount > startNumber) {
@@ -43,6 +43,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const increment = Math.floor(Math.random() * (maxInc - minInc + 1) + minInc);
         currentNumber += increment;
         updateDisplay(currentNumber);
-        localStorage.setItem('fakeAppCounter', currentNumber);
+        localStorage.setItem('appCounter', currentNumber);
     }, speedMs);
 });
